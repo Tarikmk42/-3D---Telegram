@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧟 3D Проклятие Зомби-Фермы</title>
+    <meta name="description" content="3D Telegram Mini App - спасите ферму от зомби в трехмерном мире!">
+    
+    <!-- Telegram Web App -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.min.js"></script>
+    
+    <!-- Стили -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4a6572">
+</head>
+<body>
+    <div class="app">
+        <!-- Контейнер для 3D сцены -->
+        <div id="game-container" class="screen active">
+            <canvas id="game-canvas"></canvas>
+            
+            <!-- Интерфейс поверх 3D -->
+            <div class="ui-overlay">
+                <!-- Панель статуса -->
+                <div class="status-panel">
+                    <div class="player-info-3d">
+                        <div class="avatar-3d">👨‍🌾</div>
+                        <div class="stats-3d">
+                            <div class="stat">🏆 <span id="score-3d">0</span></div>
+                            <div class="stat">❤️ <span id="lives-3d">3</span></div>
+                            <div class="stat">⏱️ <span id="time-3d">45:00</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="stage-info">
+                        <div class="stage-progress">
+                            <div class="progress-bar-3d">
+                                <div class="progress-fill-3d" id="stage-progress-3d"></div>
+                            </div>
+                            <span>Этап <span id="current-stage-3d">1</span>/13</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Панель управления -->
+                <div class="control-panel">
+                    <button id="move-forward" class="control-btn">↑</button>
+                    <div class="horizontal-controls">
+                        <button id="move-left" class="control-btn">←</button>
+                        <button id="interact" class="control-btn action-btn">⚡</button>
+                        <button id="move-right" class="control-btn">→</button>
+                    </div>
+                    <button id="move-back" class="control-btn">↓</button>
+                </div>
+
+                <!-- Панель действий -->
+                <div class="action-panel-3d">
+                    <div class="current-task" id="current-task-3d">
+                        <h3>🎯 Текущая задача</h3>
+                        <p id="task-text-3d">Найдите зараженное яблоко с кодом</p>
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <button id="hint-3d" class="quick-btn" title="Подсказка">💡</button>
+                        <button id="map-3d" class="quick-btn" title="Карта">🗺️</button>
+                        <button id="inventory-3d" class="quick-btn" title="Инвентарь">🎒</button>
+                        <button id="pause-3d" class="quick-btn" title="Пауза">⏸️</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Диалоговое окно -->
+            <div id="dialog-modal" class="modal-3d hidden">
+                <div class="dialog-content">
+                    <div class="dialog-header">
+                        <h3 id="dialog-title">Обнаружен предмет</h3>
+                        <button id="close-dialog" class="close-btn">×</button>
+                    </div>
+                    <div class="dialog-body">
+                        <div id="dialog-message">
+                            Вы нашли зараженное яблоко! Введите код для продолжения.
+                        </div>
+                        <div class="dialog-input" id="dialog-input-area">
+                            <input type="text" id="3d-answer-input" placeholder="Введите код...">
+                            <button id="submit-3d-answer">Проверить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран загрузки 3D -->
+        <div id="loading-3d" class="screen">
+            <div class="loading-3d-container">
+                <div class="loading-animation">
+                    <div class="farm-3d-model">🏠</div>
+                    <div class="loading-circle"></div>
+                </div>
+                <h2>Загружаем 3D ферму...</h2>
+                <div class="progress-bar-3d-loading">
+                    <div class="progress-fill-3d-loading" id="loading-progress-3d"></div>
+                </div>
+                <p class="loading-tip-3d" id="loading-tip-3d">Инициализация 3D мира...</p>
+            </div>
+        </div>
+
+        <!-- Главное меню 3D -->
+        <div id="main-menu-3d" class="screen">
+            <div class="menu-3d-background">
+                <canvas id="menu-canvas"></canvas>
+            </div>
+            
+            <div class="menu-3d-content">
+                <header class="menu-3d-header">
+                    <h1 class="game-title-3d">🧟 3D ПРОКЛЯТИЕ<br>ЗОМБИ-ФЕРМЫ</h1>
+                    <p class="game-subtitle-3d">Исследуй ферму в 3D и спаси животных!</p>
+                </header>
+                
+                <div class="menu-3d-buttons">
+                    <button id="start-3d-game" class="btn-3d btn-3d-primary">
+                        🎮 НАЧАТЬ 3D ИГРУ
+                    </button>
+                    <button id="how-to-play-3d" class="btn-3d btn-3d-secondary">
+                        🎮 УПРАВЛЕНИЕ
+                    </button>
+                    <button id="achievements-3d" class="btn-3d btn-3d-outline">
+                        🏆 ДОСТИЖЕНИЯ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Звуки -->
+    <audio id="3d-click-sound" preload="auto">
+        <source src="assets/sounds/click.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="3d-ambient" loop preload="auto">
+        <source src="assets/sounds/farm-ambient.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="app-3d.js"></script>
+</body>
+</html>
