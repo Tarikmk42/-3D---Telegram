@@ -1,0 +1,528 @@
+/* === БАЗОВЫЕ СТИЛИ 3D === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-3d: #4a6572;
+    --secondary-3d: #344955;
+    --accent-3d: #f9aa33;
+    --dark-3d: #232f34;
+    --light-3d: #f5f5f5;
+    --success-3d: #4caf50;
+    --danger-3d: #f44336;
+    --border-radius-3d: 8px;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--dark-3d);
+    color: var(--light-3d);
+    overflow: hidden;
+    touch-action: none;
+}
+
+.app {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+/* === СИСТЕМА ЭКРАНОВ === */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* === КАНВАС 3D === */
+#game-canvas, #menu-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%);
+}
+
+/* === ИНТЕРФЕЙС ПОВЕРХ 3D === */
+.ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.ui-overlay > * {
+    pointer-events: auto;
+}
+
+/* Панель статуса */
+.status-panel {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.player-info-3d {
+    background: rgba(35, 47, 52, 0.9);
+    padding: 10px;
+    border-radius: var(--border-radius-3d);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar-3d {
+    width: 40px;
+    height: 40px;
+    background: var(--accent-3d);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.stats-3d {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.stat {
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.stage-info {
+    background: rgba(35, 47, 52, 0.9);
+    padding: 10px;
+    border-radius: var(--border-radius-3d);
+    backdrop-filter: blur(10px);
+    text-align: center;
+}
+
+.stage-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.progress-bar-3d {
+    width: 120px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill-3d {
+    height: 100%;
+    background: var(--accent-3d);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* Панель управления */
+.control-panel {
+    position: absolute;
+    bottom: 100px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.horizontal-controls {
+    display: flex;
+    gap: 5px;
+}
+
+.control-btn {
+    width: 50px;
+    height: 50px;
+    background: rgba(35, 47, 52, 0.9);
+    border: 2px solid var(--accent-3d);
+    border-radius: 50%;
+    color: var(--light-3d);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+}
+
+.control-btn:active {
+    background: var(--accent-3d);
+    transform: scale(0.95);
+}
+
+.action-btn {
+    background: var(--accent-3d);
+    color: var(--dark-3d);
+    font-weight: bold;
+}
+
+/* Панель действий */
+.action-panel-3d {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.current-task {
+    background: rgba(35, 47, 52, 0.9);
+    padding: 15px;
+    border-radius: var(--border-radius-3d);
+    backdrop-filter: blur(10px);
+    max-width: 250px;
+}
+
+.current-task h3 {
+    color: var(--accent-3d);
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.current-task p {
+    font-size: 0.8rem;
+    line-height: 1.3;
+}
+
+.quick-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.quick-btn {
+    width: 45px;
+    height: 45px;
+    background: rgba(35, 47, 52, 0.9);
+    border: 2px solid var(--accent-3d);
+    border-radius: 50%;
+    color: var(--light-3d);
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+}
+
+.quick-btn:active {
+    background: var(--accent-3d);
+    transform: scale(0.95);
+}
+
+/* Модальные окна 3D */
+.modal-3d {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+}
+
+.modal-3d.hidden {
+    display: none;
+}
+
+.dialog-content {
+    background: var(--dark-3d);
+    border-radius: var(--border-radius-3d);
+    padding: 20px;
+    max-width: 400px;
+    width: 90%;
+    border: 2px solid var(--accent-3d);
+}
+
+.dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--secondary-3d);
+}
+
+.dialog-header h3 {
+    color: var(--accent-3d);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--light-3d);
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dialog-body {
+    margin-bottom: 15px;
+}
+
+.dialog-input {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.dialog-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--secondary-3d);
+    border-radius: var(--border-radius-3d);
+    background: var(--light-3d);
+    color: var(--dark-3d);
+}
+
+.dialog-input button {
+    padding: 10px 15px;
+    background: var(--accent-3d);
+    border: none;
+    border-radius: var(--border-radius-3d);
+    color: var(--dark-3d);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Экран загрузки 3D */
+#loading-3d {
+    background: var(--dark-3d);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-3d-container {
+    text-align: center;
+    max-width: 300px;
+}
+
+.loading-animation {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.farm-3d-model {
+    font-size: 4rem;
+    animation: float-3d 3s infinite ease-in-out;
+}
+
+.loading-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    border: 3px solid var(--accent-3d);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin-3d 1.5s linear infinite;
+}
+
+.progress-bar-3d-loading {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    margin: 1rem 0;
+    overflow: hidden;
+}
+
+.progress-fill-3d-loading {
+    height: 100%;
+    background: var(--accent-3d);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.loading-tip-3d {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Главное меню 3D */
+#main-menu-3d {
+    background: var(--dark-3d);
+}
+
+.menu-3d-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.menu-3d-content {
+    position: relative;
+    z-index: 10;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+}
+
+.menu-3d-header {
+    margin-bottom: 3rem;
+}
+
+.game-title-3d {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--accent-3d);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.game-subtitle-3d {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.menu-3d-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 250px;
+}
+
+.btn-3d {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: var(--border-radius-3d);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.btn-3d-primary {
+    background: var(--accent-3d);
+    color: var(--dark-3d);
+}
+
+.btn-3d-primary:active {
+    transform: scale(0.95);
+    background: #e89a2b;
+}
+
+.btn-3d-secondary {
+    background: var(--primary-3d);
+    color: var(--light-3d);
+    border: 2px solid var(--accent-3d);
+}
+
+.btn-3d-outline {
+    background: transparent;
+    color: var(--light-3d);
+    border: 2px solid var(--accent-3d);
+}
+
+/* Анимации */
+@keyframes float-3d {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+@keyframes spin-3d {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes fade-in-3d {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-3d {
+    animation: fade-in-3d 0.5s ease;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .control-btn, .quick-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+    
+    .current-task {
+        max-width: 200px;
+        padding: 12px;
+    }
+    
+    .game-title-3d {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .status-panel {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .player-info-3d {
+        justify-content: center;
+    }
+    
+    .action-panel-3d {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .current-task {
+        max-width: none;
+        width: 100%;
+        text-align: center;
+    }
+}
